@@ -1,95 +1,79 @@
-# 📚 Public Data Sources for GeoIntel Platform
+# 🌐 GeoIntel Platform – Feature Breakdown
 
-This document outlines all publicly available and OSINT-based data sources used in this project.
-
----
-
-## 🚌 Transport (Train, Bus, Ferry)
-
-- **Source**: [Translink GTFS](https://translink.com.au/about-translink/open-data)
-- **Type**: GTFS ZIP (static transit data)
-- **Usage**: Extract stop locations and calculate proximity scores
-- **Update Strategy**: Manual download or schedule from Translink’s data feed
+This document outlines potential features for different user types and identifies which features are in the MVP scope vs. future expansion.
 
 ---
 
-## 🌊 Flood Risk (QLD)
+## ✅ MVP Scope (Phase 1)
 
-- **Source**: [Queensland FloodCheck / QSpatial](https://qldglobe.information.qld.gov.au/)
-- **Type**: Shapefiles / GeoJSON (flood overlays)
-- **Usage**: Identify flood zone type for given coordinates
-- **Update Strategy**: Manual export from QLD Globe; consider parsing shapefiles locally
-
----
-
-## 🚓 Crime Statistics
-
-- **Source**: [Queensland Police Service](https://www.police.qld.gov.au/maps-and-statistics) or [ABS Crime by LGA](https://www.abs.gov.au/statistics/people/crime-and-justice)
-- **Type**: CSV/HTML tables
-- **Usage**: Assign crime index rating per suburb or LGA
-- **Update Strategy**: Web scraping or manual parsing
-
----
-
-## 🏗️ Development Applications / Zoning
-
-- **Source**: [Brisbane PD Online](https://developmenti.brisbane.qld.gov.au/)
-- **Type**: HTML/Scraped DA applications + zoning maps
-- **Usage**: Determine DA density, future zoning changes
-- **Update Strategy**: Scrape listings or shapefile overlays
+| Feature | Description |
+|--------|-------------|
+| 🗺️ OSM Map View | Base layer using OpenStreetMap with property pin overlays |
+| 🧭 Address Lookup | Geocode address or click map to evaluate location |
+| 🧮 Score out of 100 | Based on OSINT data: transport, flood, crime, zoning, etc. |
+| 🧱 Zoning Overlay | Show zoning type for selected property |
+| 🌊 Flood Zone Layer | Overlay from QLD FloodCheck data |
+| 🚓 Crime Rate (Suburb) | Scraped from QPS or ABS |
+| 📡 NBN Availability | FTTP/FTTN/Satellite scraped from NBNCo |
+| 🚉 Transport Proximity | GTFS data from Translink for stop distances |
+| 🎛️ Score Breakdown Panel | See category-by-category contribution to total score |
+| 📁 Configurable Weighting | Use `config.yaml` to adjust default logic |
+| 📄 Export PDF Report | Generate property report with score and factors |
 
 ---
 
-## 🏫 School Catchments
+## 🟨 Phase 2: Enhanced Intelligence & UX
 
-- **Source**: [EdMap (QLD Education)](https://www.qgso.qld.gov.au/maps/edmap/)
-- **Type**: Webmap / shapefiles
-- **Usage**: Determine catchment rating for property
-- **Update Strategy**: Manual overlay reference or polygon lookups
-
----
-
-## 📶 Broadband (NBN)
-
-- **Source**: [NBN Rollout Map](https://www.nbnco.com.au/residential/service-check)
-- **Type**: Visual map / scrape
-- **Usage**: Determine if FTTP / FTTN / Satellite applies
-- **Update Strategy**: Screen scrape or bulk lookup
+| Feature | Description |
+|--------|-------------|
+| 🎛️ Live Score Weight Sliders | Let users customize scoring priorities |
+| 🗃️ List/Grid/Map View Switcher | Toggle between card, list, or fullscreen map |
+| 📍 Proximity Filters | e.g. "Must be within 1km of train station" |
+| 📊 DA Activity Timeline | Show surrounding DA approvals as a heatmap or overlay |
+| 🏫 School Catchment Overlay | Show boundaries + school quality (MySchool) |
+| 🌆 Gentrification Predictor | Cafés, high-yield builds, demographic shifts |
+| 📍 Bookmark & Compare | Save multiple properties and compare scores side-by-side |
+| 📜 User Mode Presets | Buyer / Renter / Developer profiles with different weights |
 
 ---
 
-## 📡 Mobile Coverage
+## 🧍‍♂️ User-Specific Enhancements
 
-- **Source**: [Telstra](https://www.telstra.com.au/coverage-networks/our-coverage), [Optus](https://www.optus.com.au/coverage), [Vodafone](https://www.vodafone.com.au/network/coverage-checker)
-- **Type**: Visual coverage maps
-- **Usage**: Rough mobile reception rating
-- **Update Strategy**: Manual mapping / pixel analysis or semi-scraped
+### 🟦 Renters
+- Internet + mobile signal ratings
+- Walkability and shop proximity
+- Noise & nightlife proximity risk
+- Shared housing density detection
 
----
+### 🟨 Home Buyers
+- School catchment overlay
+- Historical flood events, not just zones
+- Infrastructure pipeline near property
+- Noise and sun orientation
 
-## 🌳 Lifestyle Indicators
-
-- **Source**: [OpenStreetMap / Overpass API](https://overpass-turbo.eu/)
-- **Type**: Query POIs (parks, shops, cafes)
-- **Usage**: Proximity-based lifestyle score
-- **Update Strategy**: Overpass queries run locally
-
----
-
-## 🧭 Address Geocoding
-
-- **Source**: [Nominatim (OSM)](https://nominatim.org/)
-- **Type**: REST API
-- **Usage**: Convert user addresses to lat/lon for spatial lookup
-- **Rate Limit**: 1 request per second for free tier
+### 🟧 Developers
+- Zoning + overlays visualisation
+- Parcel shape and area detection
+- Estimated yield calculator
+- DA approval density + trends
+- Multi-lot potential detection
 
 ---
 
-## 🧱 Additional Ideas (Later Phases)
+## 🔮 Future & Advanced Ideas
 
-- Noise maps (TMR or flight path overlays)
-- Bushfire overlays
-- Satellite imagery for terrain analysis
-- Heat stress / urban canopy maps (LGA level)
+| Feature | Description |
+|--------|-------------|
+| 🛰️ Satellite Terrain Toggle | Switch base map to satellite imagery |
+| 🌤️ Sun Path & Orientation | Shadow simulation for lot |
+| 🧾 Email or print full property dossier | PDF with property, overlays, score breakdown |
+| 🧠 Risk Forecasting Engine | Score how risky this location is over 5–10 years |
+| 🗺️ Cleanliness & Council Complaint Map | If available, show areas with low LGA complaint density |
+| 📈 Area Trend Radar | Show emerging hotspots based on DA/sales data |
 
 ---
+
+## 🔒 Licensing & Data Integrity Notes
+
+All data sourced must comply with public open-data licensing, or be clearly tagged as experimental if scraped from public portals.
+
