@@ -1,0 +1,53 @@
+# Scoring Configuration for GeoIntel Platform
+
+version: 1.0
+
+weights:
+  transport_proximity:
+    train_within_1km: 15
+    train_within_3km: 10
+    bus_within_500m: 10
+    major_road_within_1km: -5
+
+  flood_risk:
+    no_flood_zone: 0
+    low: -10
+    medium: -20
+    high: -35
+
+  crime_rate:
+    low: 10
+    moderate: 0
+    high: -15
+    very_high: -25
+
+  zoning:
+    residential_low_density: 10
+    residential_high_density: 5
+    industrial_zone_nearby: -20
+    future_industrial_planned: -30
+
+  da_activity:
+    no_recent_applications: 0
+    moderate_density: 5
+    high_density: -10
+
+  school_catchment:
+    top_rated_school: 10
+    average_school: 0
+    no_catchment: -5
+
+  broadband:
+    fttp: 10
+    fttn: 5
+    satellite_or_none: -10
+
+  mobile_coverage:
+    excellent: 5
+    good: 3
+    poor: -5
+
+  lifestyle:
+    park_within_500m: 5
+    shops_within_1km: 5
+    noise_pollution: -10
