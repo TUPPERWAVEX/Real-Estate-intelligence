@@ -1,8 +1,13 @@
-// Stub function – returns a school catchment score from 0 (poor) to 20 (elite)
 export function getSchoolCatchmentScore(address: string): number {
-  // Simulate based on keyword in address
-  if (address.toLowerCase().includes("brisbane") || address.toLowerCase().includes("toowong")) {
-    return 18;
+  const addr = address.toLowerCase();
+
+  if (addr.includes("brisbane state high") || addr.includes("indooroopilly") || addr.includes("toowong")) {
+    return 18; // Elite catchments
   }
-  return 12;
+
+  if (addr.includes("logan") || addr.includes("woodridge")) {
+    return 10; // Low demand catchments
+  }
+
+  return 14; // Default
 }
