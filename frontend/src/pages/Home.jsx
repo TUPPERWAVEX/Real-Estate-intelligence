@@ -3,6 +3,8 @@ import MapView from "../components/MapView";
 import Sidebar from "../components/Sidebar";
 import SearchBar from "../components/SearchBar";
 import PropertyDetailPanel from "../components/PropertyDetailPanel";
+import CompareBar from "../components/CompareBar";
+import CompareModal from "../components/CompareModal";
 import { dummyProperties } from "../data/dummyProperties";
 import { scoreProperty } from "../utils/scoring";
 
@@ -25,6 +27,9 @@ const Home = () => {
     return saved ? JSON.parse(saved) : [];
   });
 
+  const [compareList, setCompareList] = useState([]);
+  const [showCompare, setShowCompare] = useState(false);
+
   const toggleSave = (id) => {
     const updated = savedIds.includes(id)
       ? savedIds.filter(pid => pid !== id)
@@ -32,6 +37,14 @@ const Home = () => {
 
     setSavedIds(updated);
     localStorage.setItem('savedProperties', JSON.stringify(updated));
+  };
+
+  const toggleCompare = (property) => {
+    setCompareList((prev) =>
+      prev.some(p => p.id === property.id)
+        ? prev.filter(p => p.id !== property.id)
+        : [...prev, property].slice(0, 4)
+    );
   };
 
   const filtered = dummyProperties.map((property) => {
@@ -67,15 +80,30 @@ const Home = () => {
             onSelect={setSelectedProperty}
             savedIds={savedIds}
             onToggleSave={toggleSave}
+            compareList={compareList}
+            onToggleCompare={toggleCompare}
           />
         </div>
       </div>
+
       <PropertyDetailPanel
         property={selectedProperty}
         onClose={() => setSelectedProperty(null)}
         isSaved={selectedProperty && savedIds.includes(selectedProperty.id)}
         onToggleSave={toggleSave}
+        onToggleCompare={toggleCompare}
+        isCompared={selectedProperty && compareList.some(p => p.id === selectedProperty.id)}
       />
+
+      <CompareBar
+        selected={compareList}
+        onClear={() => setCompareList([])}
+        onCompare={() => setShowCompare(true)}
+      />
+
+      {showCompare && (
+        <CompareModal properties={compareList} onClose={() => setShowCompare(false)} />
+      )}
     </>
   );
 };
