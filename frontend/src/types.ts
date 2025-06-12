@@ -16,4 +16,7 @@ export interface ScoreBreakdown {
   crimeRate: number;
   schoolCatchment: number;
   lifestyle: number;
+  daActivity: number;
 }
+
+
