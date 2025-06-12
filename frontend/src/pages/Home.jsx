@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import MapView from "../components/MapView";
 import Sidebar from "../components/Sidebar";
+import SearchBar from "../components/SearchBar";
 import { dummyProperties } from "../data/dummyProperties";
 import { scoreProperty } from "../utils/scoring";
 
@@ -12,6 +13,8 @@ const Home = () => {
     includeFlood: true,
     includeCrime: true,
   });
+
+  const [mapCenter, setMapCenter] = useState([-27.47, 153.02]);
 
   const filtered = dummyProperties.filter((property) => {
     if (property.bedrooms < filters.minBedrooms) return false;
@@ -29,12 +32,15 @@ const Home = () => {
   });
 
   return (
-    <div style={{ display: 'flex' }}>
-      <Sidebar filters={filters} setFilters={setFilters} />
-      <div style={{ flex: 1 }}>
-        <MapView properties={filtered} />
+    <>
+      <SearchBar onSearch={setMapCenter} />
+      <div style={{ display: 'flex' }}>
+        <Sidebar filters={filters} setFilters={setFilters} />
+        <div style={{ flex: 1 }}>
+          <MapView properties={filtered} center={mapCenter} />
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
