@@ -1,12 +1,7 @@
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import { Property } from '../types';
 import { scoreProperty } from '../utils/scoring';
 
-interface MapViewProps {
-  properties: Property[];
-}
-
-const MapView = ({ properties }: MapViewProps) => {
+const MapView = ({ properties }) => {
   return (
     <MapContainer center={[-27.47, 153.02]} zoom={12} style={{ height: "100vh", width: "100%" }}>
       <TileLayer
