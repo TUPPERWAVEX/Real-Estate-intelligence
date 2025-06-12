@@ -89,6 +89,18 @@ const Sidebar = ({ filters, setFilters }) => {
         />
         Show Score Popups
       </label>
+
+      <br /><br />
+      <h4>Bookmarks</h4>
+
+      <label>
+        <input
+          type="checkbox"
+          checked={filters.savedOnly}
+          onChange={(e) => handleChange("savedOnly", e.target.checked)}
+        />
+        Show Saved Only
+      </label>
     </div>
   );
 };
