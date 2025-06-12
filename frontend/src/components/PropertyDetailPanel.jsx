@@ -1,4 +1,4 @@
-const PropertyDetailPanel = ({ property, onClose }) => {
+const PropertyDetailPanel = ({ property, onClose, isSaved, onToggleSave }) => {
   if (!property) return null;
 
   return (
@@ -28,6 +28,10 @@ const PropertyDetailPanel = ({ property, onClose }) => {
         <li>Lifestyle: {property.breakdown.lifestyle}</li>
         <li>DA Activity: {property.breakdown.daActivity}</li>
       </ul>
+
+      <button onClick={() => onToggleSave(property.id)} style={{ marginTop: "1rem" }}>
+        {isSaved ? "★ Remove Bookmark" : "☆ Save Property"}
+      </button>
     </div>
   );
 };
