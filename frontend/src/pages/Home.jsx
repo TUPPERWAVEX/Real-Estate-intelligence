@@ -5,18 +5,34 @@ import { dummyProperties } from "../data/dummyProperties";
 import { scoreProperty } from "../utils/scoring";
 
 const Home = () => {
-  const [minScore, setMinScore] = useState(0);
+  const [filters, setFilters] = useState({
+    minScore: 0,
+    minBedrooms: 0,
+    maxPrice: Infinity,
+    includeFlood: true,
+    includeCrime: true,
+  });
 
-  const filteredProperties = dummyProperties.filter((property) => {
-    const { totalScore } = scoreProperty(property);
-    return totalScore >= minScore;
+  const filtered = dummyProperties.filter((property) => {
+    if (property.bedrooms < filters.minBedrooms) return false;
+    if (property.price && property.price > filters.maxPrice) return false;
+
+    const { totalScore, breakdown } = scoreProperty(property);
+
+    let adjustedScore = 0;
+    if (filters.includeFlood) adjustedScore += breakdown.floodRisk;
+    else adjustedScore += 0;
+    if (filters.includeCrime) adjustedScore += breakdown.crimeRate;
+    adjustedScore += breakdown.transportProximity + breakdown.schoolCatchment + breakdown.lifestyle;
+
+    return adjustedScore >= filters.minScore;
   });
 
   return (
     <div style={{ display: 'flex' }}>
-      <Sidebar minScore={minScore} setMinScore={setMinScore} />
+      <Sidebar filters={filters} setFilters={setFilters} />
       <div style={{ flex: 1 }}>
-        <MapView properties={filteredProperties} />
+        <MapView properties={filtered} />
       </div>
     </div>
   );
