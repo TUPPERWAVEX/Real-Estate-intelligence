@@ -1,6 +1,5 @@
 export function getDAActivityScore(lat: number, lng: number): number {
-  // Simulated logic:
-  // Properties near (-27.47, 153.02) have more DAs
+  // Simulated high DA activity near Brisbane CBD
   const nearCBD =
     lat > -27.49 && lat < -27.45 &&
     lng > 153.00 && lng < 153.05;
