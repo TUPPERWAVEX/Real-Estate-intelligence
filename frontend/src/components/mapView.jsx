@@ -1,3 +1,5 @@
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { scoreProperty } from '../utils/scoring';
 import ScoreBreakdownCard from './ScoreBreakdownCard';
 import HeatmapLayer from './HeatmapLayer';
 import L from 'leaflet';
@@ -18,19 +20,18 @@ function createColoredIcon(color) {
     shadowSize: [41, 41],
   });
 }
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import { scoreProperty } from '../utils/scoring';
 
-const MapView = ({ properties, center }) => {
+const MapView = ({ properties, center, showHeatmap, showPopups }) => {
   return (
-    <MapContainer center={[center]} zoom={12} style={{ height: "100vh", width: "100%" }}>
+    <MapContainer center={center} zoom={12} style={{ height: "100vh", width: "100%" }}>
       <TileLayer
         attribution='&copy; OpenStreetMap contributors'
         url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
       />
-      <HeatmapLayer
-        points={properties.map(p => [p.lat, p.lng, 0.8])} // strength can be dynamic later
-      />
+
+      {showHeatmap && (
+        <HeatmapLayer points={properties.map(p => [p.lat, p.lng, 0.8])} />
+      )}
 
       {properties.map((property) => {
         const { totalScore, breakdown } = scoreProperty(property);
@@ -40,14 +41,16 @@ const MapView = ({ properties, center }) => {
             position={[property.lat, property.lng]}
             icon={createColoredIcon(getMarkerColor(totalScore))}
           >
-            <Popup>
-              <div>
-                <strong>{property.address}</strong><br />
-                🛏 {property.bedrooms} | 🛁 {property.bathrooms}<br />
-                <strong>Score: {totalScore}/100</strong>
-                <ScoreBreakdownCard breakdown={breakdown} />
-              </div>
-            </Popup>
+            {showPopups && (
+              <Popup>
+                <div>
+                  <strong>{property.address}</strong><br />
+                  🛏 {property.bedrooms} | 🛁 {property.bathrooms}<br />
+                  <strong>Score: {totalScore}/120</strong>
+                  <ScoreBreakdownCard breakdown={breakdown} />
+                </div>
+              </Popup>
+            )}
           </Marker>
         );
       })}
