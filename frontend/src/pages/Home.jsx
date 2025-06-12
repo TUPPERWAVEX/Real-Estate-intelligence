@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import MapView from "../components/MapView";
 import Sidebar from "../components/Sidebar";
 import SearchBar from "../components/SearchBar";
@@ -14,16 +14,31 @@ const Home = () => {
     includeFlood: true,
     includeCrime: true,
     showHeatmap: true,
-    showPopups: true
+    showPopups: true,
+    savedOnly: false
   });
 
   const [mapCenter, setMapCenter] = useState([-27.47, 153.02]);
   const [selectedProperty, setSelectedProperty] = useState(null);
+  const [savedIds, setSavedIds] = useState(() => {
+    const saved = localStorage.getItem('savedProperties');
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  const toggleSave = (id) => {
+    const updated = savedIds.includes(id)
+      ? savedIds.filter(pid => pid !== id)
+      : [...savedIds, id];
+
+    setSavedIds(updated);
+    localStorage.setItem('savedProperties', JSON.stringify(updated));
+  };
 
   const filtered = dummyProperties.map((property) => {
     const { totalScore, breakdown } = scoreProperty(property);
     return { ...property, totalScore, breakdown };
   }).filter((property) => {
+    if (filters.savedOnly && !savedIds.includes(property.id)) return false;
     if (property.bedrooms < filters.minBedrooms) return false;
     if (property.price && property.price > filters.maxPrice) return false;
 
@@ -50,10 +65,17 @@ const Home = () => {
             showHeatmap={filters.showHeatmap}
             showPopups={filters.showPopups}
             onSelect={setSelectedProperty}
+            savedIds={savedIds}
+            onToggleSave={toggleSave}
           />
         </div>
       </div>
-      <PropertyDetailPanel property={selectedProperty} onClose={() => setSelectedProperty(null)} />
+      <PropertyDetailPanel
+        property={selectedProperty}
+        onClose={() => setSelectedProperty(null)}
+        isSaved={selectedProperty && savedIds.includes(selectedProperty.id)}
+        onToggleSave={toggleSave}
+      />
     </>
   );
 };
