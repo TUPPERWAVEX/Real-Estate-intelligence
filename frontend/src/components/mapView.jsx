@@ -44,13 +44,14 @@ const MapView = ({ properties, center }) => {
                 <strong>{property.address}</strong><br />
                 🛏 {property.bedrooms} | 🛁 {property.bathrooms}<br />
                 <strong>Score: {totalScore}/100</strong>
-                <ul style={{ paddingLeft: 16 }}>
-                  <li>Flood: {breakdown.floodRisk}</li>
-                  <li>Transport: {breakdown.transportProximity}</li>
-                  <li>Crime: {breakdown.crimeRate}</li>
-                  <li>School: {breakdown.schoolCatchment}</li>
-                  <li>Lifestyle: {breakdown.lifestyle}</li>
-                </ul>
+                  <ul style={{ paddingLeft: 16 }}>
+                    <li>Flood: {breakdown.floodRisk}</li>
+                    <li>Transport: {breakdown.transportProximity}</li>
+                    <li>Crime: {breakdown.crimeRate}</li>
+                    <li>School: {breakdown.schoolCatchment}</li>
+                    <li>Lifestyle: {breakdown.lifestyle}</li>
+                    <li>DA Activity: {breakdown.daActivity}</li>
+                  </ul>
               </div>
             </Popup>
           </Marker>
