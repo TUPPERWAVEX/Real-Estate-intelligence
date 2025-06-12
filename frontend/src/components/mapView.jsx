@@ -20,7 +20,7 @@ function createColoredIcon(color) {
   });
 }
 
-const MapView = ({ properties, center, showHeatmap, showPopups, onSelect }) => {
+const MapView = ({ properties, center, showHeatmap, showPopups, onSelect, savedIds, onToggleSave }) => {
   return (
     <MapContainer center={center} zoom={12} style={{ height: "100vh", width: "100%" }}>
       <TileLayer
@@ -49,6 +49,10 @@ const MapView = ({ properties, center, showHeatmap, showPopups, onSelect }) => {
                   🛏 {property.bedrooms} | 🛁 {property.bathrooms}<br />
                   <strong>Score: {property.totalScore}/120</strong>
                   <ScoreBreakdownCard breakdown={property.breakdown} />
+                  <br />
+                  <button onClick={() => onToggleSave(property.id)}>
+                    {savedIds.includes(property.id) ? "★ Saved" : "☆ Save"}
+                  </button>
                 </div>
               </Popup>
             )}
