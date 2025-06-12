@@ -12,6 +12,8 @@ const Home = () => {
     maxPrice: Infinity,
     includeFlood: true,
     includeCrime: true,
+    showHeatmap: true,
+    showPopups: true
   });
 
   const [mapCenter, setMapCenter] = useState([-27.47, 153.02]);
@@ -24,9 +26,8 @@ const Home = () => {
 
     let adjustedScore = 0;
     if (filters.includeFlood) adjustedScore += breakdown.floodRisk;
-    else adjustedScore += 0;
     if (filters.includeCrime) adjustedScore += breakdown.crimeRate;
-    adjustedScore += breakdown.transportProximity + breakdown.schoolCatchment + breakdown.lifestyle;
+    adjustedScore += breakdown.transportProximity + breakdown.schoolCatchment + breakdown.lifestyle + breakdown.daActivity;
 
     return adjustedScore >= filters.minScore;
   });
@@ -37,7 +38,12 @@ const Home = () => {
       <div style={{ display: 'flex' }}>
         <Sidebar filters={filters} setFilters={setFilters} />
         <div style={{ flex: 1 }}>
-          <MapView properties={filtered} center={mapCenter} />
+          <MapView
+            properties={filtered}
+            center={mapCenter}
+            showHeatmap={filters.showHeatmap}
+            showPopups={filters.showPopups}
+          />
         </div>
       </div>
     </>
