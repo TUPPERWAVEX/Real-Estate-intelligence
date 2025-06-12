@@ -2,6 +2,7 @@ import { useState } from 'react';
 import MapView from "../components/MapView";
 import Sidebar from "../components/Sidebar";
 import SearchBar from "../components/SearchBar";
+import PropertyDetailPanel from "../components/PropertyDetailPanel";
 import { dummyProperties } from "../data/dummyProperties";
 import { scoreProperty } from "../utils/scoring";
 
@@ -17,17 +18,22 @@ const Home = () => {
   });
 
   const [mapCenter, setMapCenter] = useState([-27.47, 153.02]);
+  const [selectedProperty, setSelectedProperty] = useState(null);
 
-  const filtered = dummyProperties.filter((property) => {
+  const filtered = dummyProperties.map((property) => {
+    const { totalScore, breakdown } = scoreProperty(property);
+    return { ...property, totalScore, breakdown };
+  }).filter((property) => {
     if (property.bedrooms < filters.minBedrooms) return false;
     if (property.price && property.price > filters.maxPrice) return false;
 
-    const { totalScore, breakdown } = scoreProperty(property);
-
     let adjustedScore = 0;
-    if (filters.includeFlood) adjustedScore += breakdown.floodRisk;
-    if (filters.includeCrime) adjustedScore += breakdown.crimeRate;
-    adjustedScore += breakdown.transportProximity + breakdown.schoolCatchment + breakdown.lifestyle + breakdown.daActivity;
+    if (filters.includeFlood) adjustedScore += property.breakdown.floodRisk;
+    if (filters.includeCrime) adjustedScore += property.breakdown.crimeRate;
+    adjustedScore += property.breakdown.transportProximity +
+                     property.breakdown.schoolCatchment +
+                     property.breakdown.lifestyle +
+                     property.breakdown.daActivity;
 
     return adjustedScore >= filters.minScore;
   });
@@ -43,9 +49,11 @@ const Home = () => {
             center={mapCenter}
             showHeatmap={filters.showHeatmap}
             showPopups={filters.showPopups}
+            onSelect={setSelectedProperty}
           />
         </div>
       </div>
+      <PropertyDetailPanel property={selectedProperty} onClose={() => setSelectedProperty(null)} />
     </>
   );
 };
