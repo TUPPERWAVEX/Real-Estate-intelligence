@@ -1,5 +1,4 @@
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import { scoreProperty } from '../utils/scoring';
 import ScoreBreakdownCard from './ScoreBreakdownCard';
 import HeatmapLayer from './HeatmapLayer';
 import L from 'leaflet';
@@ -21,7 +20,7 @@ function createColoredIcon(color) {
   });
 }
 
-const MapView = ({ properties, center, showHeatmap, showPopups }) => {
+const MapView = ({ properties, center, showHeatmap, showPopups, onSelect }) => {
   return (
     <MapContainer center={center} zoom={12} style={{ height: "100vh", width: "100%" }}>
       <TileLayer
@@ -34,20 +33,22 @@ const MapView = ({ properties, center, showHeatmap, showPopups }) => {
       )}
 
       {properties.map((property) => {
-        const { totalScore, breakdown } = scoreProperty(property);
         return (
           <Marker
             key={property.id}
             position={[property.lat, property.lng]}
-            icon={createColoredIcon(getMarkerColor(totalScore))}
+            icon={createColoredIcon(getMarkerColor(property.totalScore))}
+            eventHandlers={{
+              click: () => onSelect(property)
+            }}
           >
             {showPopups && (
               <Popup>
                 <div>
                   <strong>{property.address}</strong><br />
                   🛏 {property.bedrooms} | 🛁 {property.bathrooms}<br />
-                  <strong>Score: {totalScore}/120</strong>
-                  <ScoreBreakdownCard breakdown={breakdown} />
+                  <strong>Score: {property.totalScore}/120</strong>
+                  <ScoreBreakdownCard breakdown={property.breakdown} />
                 </div>
               </Popup>
             )}
