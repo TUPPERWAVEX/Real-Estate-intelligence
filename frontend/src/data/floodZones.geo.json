@@ -1,0 +1,21 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "zone": "Flood Zone A" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [153.00, -27.49],
+            [153.05, -27.49],
+            [153.05, -27.45],
+            [153.00, -27.45],
+            [153.00, -27.49]
+          ]
+        ]
+      }
+    }
+  ]
+}
