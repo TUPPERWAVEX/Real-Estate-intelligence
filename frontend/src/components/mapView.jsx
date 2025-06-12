@@ -20,9 +20,9 @@ function createColoredIcon(color) {
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { scoreProperty } from '../utils/scoring';
 
-const MapView = ({ properties }) => {
+const MapView = ({ properties, center }) => {
   return (
-    <MapContainer center={[-27.47, 153.02]} zoom={12} style={{ height: "100vh", width: "100%" }}>
+    <MapContainer center={[center]} zoom={12} style={{ height: "100vh", width: "100%" }}>
       <TileLayer
         attribution='&copy; OpenStreetMap contributors'
         url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
