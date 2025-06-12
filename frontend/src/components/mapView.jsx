@@ -1,3 +1,4 @@
+import HeatmapLayer from './HeatmapLayer';
 import L from 'leaflet';
 
 function getMarkerColor(score) {
@@ -26,6 +27,10 @@ const MapView = ({ properties }) => {
         attribution='&copy; OpenStreetMap contributors'
         url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
       />
+      <HeatmapLayer
+        points={properties.map(p => [p.lat, p.lng, 0.8])} // strength can be dynamic later
+      />
+
       {properties.map((property) => {
         const { totalScore, breakdown } = scoreProperty(property);
         return (
