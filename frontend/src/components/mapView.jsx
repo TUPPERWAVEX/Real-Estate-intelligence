@@ -1,3 +1,21 @@
+import L from 'leaflet';
+
+function getMarkerColor(score) {
+  if (score >= 80) return 'green';
+  if (score >= 50) return 'orange';
+  return 'red';
+}
+
+function createColoredIcon(color) {
+  return new L.Icon({
+    iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-${color}.png`,
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowUrl: "https://unpkg.com/leaflet@1.9.3/dist/images/marker-shadow.png",
+    shadowSize: [41, 41],
+  });
+}
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { scoreProperty } from '../utils/scoring';
 
@@ -11,7 +29,11 @@ const MapView = ({ properties }) => {
       {properties.map((property) => {
         const { totalScore, breakdown } = scoreProperty(property);
         return (
-          <Marker key={property.id} position={[property.lat, property.lng]}>
+          <Marker
+            key={property.id}
+            position={[property.lat, property.lng]}
+            icon={createColoredIcon(getMarkerColor(totalScore))}
+          >
             <Popup>
               <div>
                 <strong>{property.address}</strong><br />
