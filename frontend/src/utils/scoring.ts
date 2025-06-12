@@ -8,7 +8,7 @@ import { getLifestyleScore } from "../data/lifestyle";
 export function scoreProperty(property: Property): { totalScore: number; breakdown: ScoreBreakdown } {
   const floodRisk = getFloodRiskScore(property.lat, property.lng);
   const transport = getTransportProximityScore(property.lat, property.lng);
-  const crime = getCrimeRateScore(property.lat, property.lng);
+  const crime = getCrimeRateScore(property.lat, property.lng, property.suburb);
   const school = getSchoolCatchmentScore(property.address);
   const lifestyle = getLifestyleScore(property.lat, property.lng);
 
