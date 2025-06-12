@@ -1,22 +1,33 @@
 import { useState } from 'react';
 
-const Sidebar = ({ minScore, setMinScore }) => {
+const Sidebar = ({ filters, setFilters }) => {
+  const handleChange = (key, value) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+  };
+
   return (
-    <div style={{ padding: '1rem', width: '250px', background: '#f4f4f4', height: '100vh' }}>
+    <div style={{ padding: '1rem', width: '260px', background: '#f4f4f4', height: '100vh' }}>
       <h3>Filter Properties</h3>
+
       <label>
-        Min Score: {minScore}
+        Min Score: {filters.minScore}
         <input
           type="range"
           min={0}
           max={100}
-          value={minScore}
-          onChange={(e) => setMinScore(Number(e.target.value))}
+          value={filters.minScore}
+          onChange={(e) => handleChange("minScore", Number(e.target.value))}
           style={{ width: '100%' }}
         />
       </label>
-    </div>
-  );
-};
 
-export default Sidebar;
+      <br /><br />
+
+      <label>
+        Min Bedrooms:
+        <input
+          type="number"
+          min={0}
+          value={filters.minBedrooms}
+          onChange={(e) => handleChange("minBedrooms", Number(e.target.value))}
+          style={{ width: '100%
