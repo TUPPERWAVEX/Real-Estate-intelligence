@@ -1,6 +1,17 @@
-// Stub function – returns a fake flood risk score from 0 (no risk) to 20 (high risk)
+// Dummy bounding box: Brisbane River area (approximate)
+const floodBox = {
+  minLat: -27.495,
+  maxLat: -27.450,
+  minLng: 152.98,
+  maxLng: 153.05
+};
+
 export function getFloodRiskScore(lat: number, lng: number): number {
-  // Simulate: lower scores for higher elevations, etc.
-  const isFloodProne = lat < -27.5 && lng > 152.9;
+  const isFloodProne =
+    lat >= floodBox.minLat &&
+    lat <= floodBox.maxLat &&
+    lng >= floodBox.minLng &&
+    lng <= floodBox.maxLng;
+
   return isFloodProne ? 5 : 15;
 }
