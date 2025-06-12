@@ -14,7 +14,7 @@ const Sidebar = ({ filters, setFilters }) => {
         <input
           type="range"
           min={0}
-          max={100}
+          max={120}
           value={filters.minScore}
           onChange={(e) => handleChange("minScore", Number(e.target.value))}
           style={{ width: '100%' }}
@@ -30,4 +30,67 @@ const Sidebar = ({ filters, setFilters }) => {
           min={0}
           value={filters.minBedrooms}
           onChange={(e) => handleChange("minBedrooms", Number(e.target.value))}
-          style={{ width: '100%
+          style={{ width: '100%' }}
+        />
+      </label>
+
+      <br /><br />
+
+      <label>
+        Max Price:
+        <input
+          type="number"
+          min={0}
+          value={filters.maxPrice}
+          onChange={(e) => handleChange("maxPrice", Number(e.target.value))}
+          style={{ width: '100%' }}
+        />
+      </label>
+
+      <br /><br />
+
+      <label>
+        <input
+          type="checkbox"
+          checked={filters.includeFlood}
+          onChange={(e) => handleChange("includeFlood", e.target.checked)}
+        />
+        Include Flood Score
+      </label>
+
+      <label>
+        <input
+          type="checkbox"
+          checked={filters.includeCrime}
+          onChange={(e) => handleChange("includeCrime", e.target.checked)}
+        />
+        Include Crime Score
+      </label>
+
+      <br /><br />
+      <h4>Map Layers</h4>
+
+      <label>
+        <input
+          type="checkbox"
+          checked={filters.showHeatmap}
+          onChange={(e) => handleChange("showHeatmap", e.target.checked)}
+        />
+        Show Heatmap
+      </label>
+
+      <br />
+
+      <label>
+        <input
+          type="checkbox"
+          checked={filters.showPopups}
+          onChange={(e) => handleChange("showPopups", e.target.checked)}
+        />
+        Show Score Popups
+      </label>
+    </div>
+  );
+};
+
+export default Sidebar;
