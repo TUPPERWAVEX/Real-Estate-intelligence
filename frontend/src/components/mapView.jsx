@@ -1,65 +1,100 @@
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import ScoreBreakdownCard from './ScoreBreakdownCard';
-import HeatmapLayer from './HeatmapLayer';
+import React, { useEffect, useState } from 'react';
+import { MapContainer, TileLayer, Marker, Popup, Polygon } from 'react-leaflet';
 import L from 'leaflet';
+import * as turf from '@turf/turf';
+import properties from '../data/mockProperties';
+import { loadFloodZones } from '../utils/loadFloodZones';
+import ScoreCard from './ScoreCard';
+import FilterPanel from './FilterPanel';
 
-function getMarkerColor(score) {
-  if (score >= 80) return 'green';
-  if (score >= 50) return 'orange';
-  return 'red';
-}
-
-function createColoredIcon(color) {
-  return new L.Icon({
-    iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-${color}.png`,
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowUrl: "https://unpkg.com/leaflet@1.9.3/dist/images/marker-shadow.png",
-    shadowSize: [41, 41],
+const MapView = () => {
+  const [selectedProperty, setSelectedProperty] = useState(null);
+  const [floodZones, setFloodZones] = useState([]);
+  const [filters, setFilters] = useState({
+    beds: 0,
+    baths: 0,
+    score: 0,
+    suburb: ''
   });
-}
 
-const MapView = ({ properties, center, showHeatmap, showPopups, onSelect, savedIds, onToggleSave }) => {
+  useEffect(() => {
+    setFloodZones(loadFloodZones());
+  }, []);
+
+  const checkFloodRisk = (lat, lng) => {
+    const point = turf.point([lng, lat]);
+    for (const zone of floodZones) {
+      if (turf.booleanPointInPolygon(point, zone)) return true;
+    }
+    return false;
+  };
+
+  const getMarkerColor = (score) => {
+    if (score >= 80) return '4caf50'; // green
+    if (score >= 60) return 'ff9800'; // orange
+    return 'f44336'; // red
+  };
+
+  const iconCache = {};
+  const getColoredIcon = (hexColor) => {
+    if (!iconCache[hexColor]) {
+      iconCache[hexColor] = new L.Icon({
+        iconUrl: `https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|${hexColor}`,
+        iconSize: [21, 34],
+        iconAnchor: [10, 34],
+        popupAnchor: [0, -30]
+      });
+    }
+    return iconCache[hexColor];
+  };
+
   return (
-    <MapContainer center={center} zoom={12} style={{ height: "100vh", width: "100%" }}>
-      <TileLayer
-        attribution='&copy; OpenStreetMap contributors'
-        url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-      />
+    <>
+      <FilterPanel filters={filters} setFilters={setFilters} />
+      <MapContainer center={[-27.4705, 153.0260]} zoom={13} style={{ height: '100vh', width: '100%' }}>
+        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
-      {showHeatmap && (
-        <HeatmapLayer points={properties.map(p => [p.lat, p.lng, 0.8])} />
-      )}
+        {floodZones.map((zone, i) => (
+          <Polygon
+            key={i}
+            positions={zone.geometry.coordinates[0].map(([lng, lat]) => [lat, lng])}
+            pathOptions={{ color: 'red', fillOpacity: 0.4 }}
+          />
+        ))}
 
-      {properties.map((property) => {
-        return (
-          <Marker
-            key={property.id}
-            position={[property.lat, property.lng]}
-            icon={createColoredIcon(getMarkerColor(property.totalScore))}
-            eventHandlers={{
-              click: () => onSelect(property)
-            }}
-          >
-            {showPopups && (
-              <Popup>
-                <div>
-                  <strong>{property.address}</strong><br />
-                  🛏 {property.bedrooms} | 🛁 {property.bathrooms}<br />
-                  <strong>Score: {property.totalScore}/120</strong>
-                  <ScoreBreakdownCard breakdown={property.breakdown} />
-                  <br />
-                  <button onClick={() => onToggleSave(property.id)}>
-                    {savedIds.includes(property.id) ? "★ Saved" : "☆ Save"}
-                  </button>
-                </div>
-              </Popup>
-            )}
-          </Marker>
-        );
-      })}
-    </MapContainer>
+        {properties
+          .filter(p =>
+            p.beds >= filters.beds &&
+            p.baths >= filters.baths &&
+            p.score >= filters.score &&
+            p.address.toLowerCase().includes(filters.suburb.toLowerCase())
+          )
+          .map((property) => {
+            const floodRisk = checkFloodRisk(property.lat, property.lng);
+            const adjustedProperty = {
+              ...property,
+              breakdown: {
+                ...property.breakdown,
+                flood: floodRisk ? 1 : 10,
+              }
+            };
+            return (
+              <Marker
+                key={property.id}
+                position={[property.lat, property.lng]}
+                icon={getColoredIcon(getMarkerColor(adjustedProperty.score))}
+                eventHandlers={{
+                  click: () => setSelectedProperty(adjustedProperty)
+                }}
+              >
+                <Popup>
+                  <ScoreCard property={selectedProperty} />
+                </Popup>
+              </Marker>
+            );
+          })}
+      </MapContainer>
+    </>
   );
 };
 
