@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Polygon } from 'react-leaflet';
 import L from 'leaflet';
 import * as turf from '@turf/turf';
+import HeatmapLayer from 'react-leaflet-heatmap-layer-v3';
+
 import properties from '../data/mockProperties';
+import heatPoints from '../data/mockHeatData';
 import { loadFloodZones } from '../utils/loadFloodZones';
 import ScoreCard from './ScoreCard';
 import FilterPanel from './FilterPanel';
-import HeatmapLayer from 'react-leaflet-heatmap-layer-v3';
-import heatPoints from '../data/mockHeatData';
 
 const MapView = () => {
   const [selectedProperty, setSelectedProperty] = useState(null);
@@ -32,9 +33,9 @@ const MapView = () => {
   };
 
   const getMarkerColor = (score) => {
-    if (score >= 80) return '4caf50'; // green
-    if (score >= 60) return 'ff9800'; // orange
-    return 'f44336'; // red
+    if (score >= 80) return '4caf50';
+    if (score >= 60) return 'ff9800';
+    return 'f44336';
   };
 
   const iconCache = {};
@@ -56,6 +57,18 @@ const MapView = () => {
       <MapContainer center={[-27.4705, 153.0260]} zoom={13} style={{ height: '100vh', width: '100%' }}>
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
+        {/* 🔥 Heatmap Layer */}
+        <HeatmapLayer
+          points={heatPoints}
+          longitudeExtractor={p => p[1]}
+          latitudeExtractor={p => p[0]}
+          intensityExtractor={p => p[2]}
+          radius={20}
+          blur={15}
+          max={1}
+        />
+
+        {/* 🟥 Flood Zones */}
         {floodZones.map((zone, i) => (
           <Polygon
             key={i}
@@ -64,6 +77,7 @@ const MapView = () => {
           />
         ))}
 
+        {/* 📍 Property Markers */}
         {properties
           .filter(p =>
             p.beds >= filters.beds &&
