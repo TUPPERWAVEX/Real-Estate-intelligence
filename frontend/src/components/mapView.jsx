@@ -6,6 +6,8 @@ import properties from '../data/mockProperties';
 import { loadFloodZones } from '../utils/loadFloodZones';
 import ScoreCard from './ScoreCard';
 import FilterPanel from './FilterPanel';
+import HeatmapLayer from 'react-leaflet-heatmap-layer-v3';
+import heatPoints from '../data/mockHeatData';
 
 const MapView = () => {
   const [selectedProperty, setSelectedProperty] = useState(null);
