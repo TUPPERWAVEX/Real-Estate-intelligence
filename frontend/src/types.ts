@@ -1,22 +1,25 @@
-export interface Property {
-  id: string;
-  address: string;
-  lat: number;
-  lng: number;
-  bedrooms: number;
-  bathrooms: number;
-  price?: number;
-  suburb?: string;
-  postcode?: string;
+// src/types.ts
+
+export interface PropertyData {
+  // Proximity
+  distanceToTransport: number;    // in km
+  distanceToShops: number;        // in km
+  distanceToParks: number;        // in km
+
+  // Flood
+  floodZone: 'None' | 'Low' | 'Medium' | 'High' | string;
+
+  // Crime
+  crimeRate: number;              // per 1000 residents
+
+  // Internet
+  nbnAvailable: boolean;
+
+  // Schools
+  distanceToBestSchool: number;   // in km
+
+  // Lifestyle
+  walkabilityScore?: number;      // 0–100
+  cafeProximityScore?: number;    // 0–100
+  noiseLevelScore?: number;       // 0–100
 }
-
-export interface ScoreBreakdown {
-  floodRisk: number;
-  transportProximity: number;
-  crimeRate: number;
-  schoolCatchment: number;
-  lifestyle: number;
-  daActivity: number;
-}
-
-
